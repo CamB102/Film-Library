@@ -1,3 +1,4 @@
+// FilmLibrary.js
 import React, { useState } from 'react';
 import FilmDetail from './FilmDetail';
 import FilmRow from './FilmRow';
@@ -13,7 +14,21 @@ function FilmLibrary() {
   const [showFavorites, setShowFavorites] = useState(false);
 
   const handleToggleFavorites = () => {
-    setShowFavorites(prevShowFavorites => !prevShowFavorites);
+    setShowFavorites((prevShowFavorites) => !prevShowFavorites);
+  };
+
+  const toggleFavorite = (film) => {
+    if (isFilmFavorite(film)) {
+      setFavoriteFilms((prevFavoriteFilms) =>
+        prevFavoriteFilms.filter((f) => f.title !== film.title)
+      );
+    } else {
+      setFavoriteFilms((prevFavoriteFilms) => [...prevFavoriteFilms, film]);
+    }
+  };
+
+  const isFilmFavorite = (film) => {
+    return favoriteFilms.some((f) => f.title === film.title);
   };
 
   const filmsToDisplay = showFavorites ? favoriteFilms : TMDB.films;
@@ -39,7 +54,7 @@ function FilmLibrary() {
           </button>
         </div>
         <div className="film-row-container">
-          {filmsToDisplay.map(film => (
+          {filmsToDisplay.map((film) => (
             <FilmRow
               key={film.id}
               title={film.title}
@@ -48,8 +63,8 @@ function FilmLibrary() {
               overview={film.overview}
               setSelectedFilm={setSelectedFilm}
               backdropURL={film.backdrop_path}
-              favoriteFilms={favoriteFilms}
-              setFavoriteFilms={setFavoriteFilms}
+              isFavorite={isFilmFavorite(film)}
+              toggleFavorite={() => toggleFavorite(film)}
             />
           ))}
         </div>

@@ -1,8 +1,7 @@
-// FilmLibrary.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FilmDetail from './FilmDetail';
 import FilmRow from './FilmRow';
-import TMDB from './TMDB';
+import { TMDB, TMDB_API_KEY } from './TMDB';
 
 import './FilmLibrary.css';
 import './FilmRow.css';
@@ -12,6 +11,55 @@ function FilmLibrary() {
   const [selectedFilm, setSelectedFilm] = useState(null);
   const [favoriteFilms, setFavoriteFilms] = useState([]);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [filmDetails, setFilmDetails] = useState(null);
+  const [filmId, setFilmId] = useState(0);
+  const [filmRows, setFilmRows] = useState({page:0,results:[]});
+
+  useEffect(() => {fetchFilmRow()},[])
+
+  useEffect(() => {
+    if (selectedFilm) {
+      console.log(filmId)
+      fetchFilmDetails();
+  }}, [selectedFilm]);
+
+  
+
+  const fetchFilmRow = () => {
+    const options = {
+            method: 'GET',
+            headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MmIyNmM0NzkyYTc4ZWQ0MGYxM2M4MWVjZDY3ZDI1NiIsInN1YiI6IjY0YjE1MmZhMmNkZTk4MDBjYjg0MmY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.W-EGs7FxBKocYb-7ekurE-9e43qBu9ASfLoLeRopSXU'
+          }
+        };
+
+    const url = 'https://api.themoviedb.org/3/discover/movie?primary_release_year=2022&sort_by=popularity.desc';
+    return fetch(url, options)
+      .then(response => response.json())
+      // .then(response => console.log(response))
+      .then(data => setFilmRows(data))
+      .catch(error => console.error('Error fetching film details:', error));
+  }
+
+  const fetchFilmDetails = () => {
+    const options = {
+            method: 'GET',
+            headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MmIyNmM0NzkyYTc4ZWQ0MGYxM2M4MWVjZDY3ZDI1NiIsInN1YiI6IjY0YjE1MmZhMmNkZTk4MDBjYjg0MmY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.W-EGs7FxBKocYb-7ekurE-9e43qBu9ASfLoLeRopSXU'
+          }
+        };
+
+    const url = `https://api.themoviedb.org/3/movie/${filmId}`;
+    return fetch(url, options)
+      .then(response => response.json())
+      // .then(response => console.log(response))
+      // .then(data => setFilmDetails(data))
+      // .catch(error => console.error('Error fetching film details:', error));
+  }
+
+
 
   const handleToggleFavorites = () => {
     setShowFavorites((prevShowFavorites) => !prevShowFavorites);
@@ -31,7 +79,7 @@ function FilmLibrary() {
     return favoriteFilms.some((f) => f.title === film.title);
   };
 
-  const filmsToDisplay = showFavorites ? favoriteFilms : TMDB.films;
+  // const filmsToDisplay = showFavorites ? favoriteFilms : filmRow;
 
   return (
     <div className="FilmLibrary">
@@ -54,10 +102,11 @@ function FilmLibrary() {
           </button>
         </div>
         <div className="film-row-container">
-          {filmsToDisplay.map((film) => (
+          {filmRows.results.map((film,index) => 
             <FilmRow
-              key={film.id}
-              title={film.title}
+              key={index}
+              id={film.id}
+              title={film.original_title}
               posterURL={`https://image.tmdb.org/t/p/w780/${film.poster_path}`}
               year={new Date(film.release_date).getFullYear()}
               overview={film.overview}
@@ -65,13 +114,14 @@ function FilmLibrary() {
               backdropURL={film.backdrop_path}
               isFavorite={isFilmFavorite(film)}
               toggleFavorite={() => toggleFavorite(film)}
+              setFilmId={setFilmId}
             />
-          ))}
+          )}
         </div>
       </div>
       <div className="film-details">
         <h1 className="section-title">DETAILS</h1>
-        <FilmDetail selectedFilm={selectedFilm} />
+        <FilmDetail selectedFilm={selectedFilm} promiseFilmDetails={fetchFilmDetails()} />
       </div>
     </div>
   );

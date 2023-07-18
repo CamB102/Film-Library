@@ -29,12 +29,11 @@ function FilmLibrary() {
     const options = {
             method: 'GET',
             headers: {
-            accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MmIyNmM0NzkyYTc4ZWQ0MGYxM2M4MWVjZDY3ZDI1NiIsInN1YiI6IjY0YjE1MmZhMmNkZTk4MDBjYjg0MmY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.W-EGs7FxBKocYb-7ekurE-9e43qBu9ASfLoLeRopSXU'
+            accept: 'application/json'
           }
         };
 
-    const url = 'https://api.themoviedb.org/3/discover/movie?primary_release_year=2022&sort_by=popularity.desc';
+    const url = `https://api.themoviedb.org/3/discover/movie?primary_release_year=2022&sort_by=popularity.desc&api_key=${TMDB_API_KEY}`;
     return fetch(url, options)
       .then(response => response.json())
       // .then(response => console.log(response))
@@ -47,11 +46,11 @@ function FilmLibrary() {
             method: 'GET',
             headers: {
             accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MmIyNmM0NzkyYTc4ZWQ0MGYxM2M4MWVjZDY3ZDI1NiIsInN1YiI6IjY0YjE1MmZhMmNkZTk4MDBjYjg0MmY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.W-EGs7FxBKocYb-7ekurE-9e43qBu9ASfLoLeRopSXU'
+
           }
         };
 
-    const url = `https://api.themoviedb.org/3/movie/${filmId}`;
+    const url = `https://api.themoviedb.org/3/movie/${filmId}?api_key=${TMDB_API_KEY}`;
     return fetch(url, options)
       .then(response => response.json())
       // .then(response => console.log(response))

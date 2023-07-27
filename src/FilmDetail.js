@@ -22,23 +22,6 @@ function FilmDetail({selectedFilm, promiseFilmDetails}) {
     if (!data) {
         return <div>Loading....</div>
     }
-    // const {backdropURL, posterURL} = selectedFilm
-
-    // return (
-    // <div className="FilmDetail is-hydrated">
-    //     <figure className="film-backdrop">
-    //         <img src={`https://image.tmdb.org/t/p/w1280${backdropURL}`} alt={`${title} backdrop`} />
-    //         <h1 className="film-title">{title}</h1>
-    //     </figure>
-    //     <div className="film-meta">
-    //         {/* <p className="film-tagline">{filmDetails?.tagline}</p> */}
-    //         <p className="film-detail-overview">
-    //         <img src={`https://image.tmdb.org/t/p/w780${posterURL}`} className="film-detail-poster" alt={`${title} poster`} />
-    //         {overview}
-    //     </p>
-    //     </div>
-    // </div>
-    // )
 
     return (
         <div className="FilmDetail is-hydrated">

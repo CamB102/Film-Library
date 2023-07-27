@@ -1,5 +1,6 @@
 // FilmRow.js
 import React, { useState } from 'react';
+import {Link} from 'react-router-dom'
 
 
 function FilmRow({
@@ -34,11 +35,14 @@ function FilmRow({
               {isFavorite ? 'remove_from_queue' : 'add_to_queue'}
             </span>
           </button>
-          <button className="action">
+          {/* <button className="action">
             <span className="material-icons" onClick={showFilmDetail}>
               read_more
             </span>
-          </button>
+          </button> */}
+          <Link to={`/films/${id}`} className="action">
+            <span className="material-icons" onClick={showFilmDetail} >read_more</span>
+          </Link>
         </div>
       </div>
     </div>

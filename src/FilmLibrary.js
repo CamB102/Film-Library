@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useParams} from 'react-router-dom'
 import FilmDetail from './FilmDetail';
 import FilmRow from './FilmRow';
 import { TMDB, TMDB_API_KEY } from './TMDB';
@@ -14,14 +15,14 @@ function FilmLibrary() {
   const [filmDetails, setFilmDetails] = useState(null);
   const [filmId, setFilmId] = useState(0);
   const [filmRows, setFilmRows] = useState({page:0,results:[]});
-
+  
   useEffect(() => {fetchFilmRow()},[])
-
   useEffect(() => {
     if (selectedFilm) {
       console.log(filmId)
       fetchFilmDetails();
   }}, [selectedFilm]);
+  
 
   
 
@@ -40,7 +41,8 @@ function FilmLibrary() {
       .then(data => setFilmRows(data))
       .catch(error => console.error('Error fetching film details:', error));
   }
-
+  const {filmID} = useParams();
+  console.log(filmID)
   const fetchFilmDetails = () => {
     const options = {
             method: 'GET',
@@ -50,7 +52,7 @@ function FilmLibrary() {
           }
         };
 
-    const url = `https://api.themoviedb.org/3/movie/${filmId}?api_key=${TMDB_API_KEY}`;
+    const url = `https://api.themoviedb.org/3/movie/${filmID}?api_key=${TMDB_API_KEY}`;
     return fetch(url, options)
       .then(response => response.json())
       // .then(response => console.log(response))
